@@ -7,3 +7,4 @@ build="build.rs"
 [dependencies]
 aoc = { path = "../aoc" }
 tokio = { version="1.41.1", features = ["full"] }
+url = "2.5.4"
