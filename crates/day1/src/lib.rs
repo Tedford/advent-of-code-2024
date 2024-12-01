@@ -1,11 +1,7 @@
 use std::collections::HashMap;
 
 fn calculate_distances(x: &Vec<i32>, y: &Vec<i32>) -> Vec<i32> {
-    let mut distances = Vec::new();
-    for i in 0..x.len() {
-        distances.push((x[i] - y[i]).abs());
-    }
-    distances
+    x.iter().zip(y.iter()).map(|(a, b)| (a - b).abs()).collect()
 }
 
 fn parse_input(input: &Vec<String>) -> (Vec<i32>, Vec<i32>) {
