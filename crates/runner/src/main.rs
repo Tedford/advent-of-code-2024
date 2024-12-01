@@ -28,14 +28,16 @@ async fn main() {
     let input = aoc::get_input(year, day, &context).await;
     match input {
         Ok(lines) => {
-
-            let part1 = day1::part1(&lines);
+            let (part1, part2) = match day.as_str() {
+                "1" => (day1::part1(&lines), day1::part2(&lines)),
+                _ => {
+                    println!("Day {} not implemented", day);
+                    process::exit(3);
+                }
+            };
             println!("Part 1: {}", part1);
-
-            let part2 = day1::part2(&lines);
             println!("Part 2: {}", part2);
-
-    },
+        }
         Err(e) => println!("Error: {}", e),
     }
 }
