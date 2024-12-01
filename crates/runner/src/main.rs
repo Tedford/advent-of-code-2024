@@ -27,7 +27,15 @@ async fn main() {
     };
     let input = aoc::get_input(year, day, &context).await;
     match input {
-        Ok(lines) => println!("{}", lines.join("\n")),
+        Ok(lines) => {
+
+            let part1 = day1::part1(&lines);
+            println!("Part 1: {}", part1);
+
+            let part2 = day1::part2(&lines);
+            println!("Part 2: {}", part2);
+
+    },
         Err(e) => println!("Error: {}", e),
     }
 }

@@ -6,5 +6,6 @@ build="build.rs"
 
 [dependencies]
 aoc = { path = "../aoc" }
+day1 = { path = "../day1" }
 tokio = { version="1.41.1", features = ["full"] }
 url = "2.5.4"
