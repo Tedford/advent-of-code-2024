@@ -45,14 +45,11 @@ fn is_safe(reports: &Vec<i32>) -> bool {
 }
 
 fn is_safe_with_damper(reports: &Vec<i32>) -> bool {
-    match is_safe(reports) {
-        true => true,
-        false => reports.iter().enumerate().any(|(i, _)| {
-            let mut slice = reports.clone();
-            slice.remove(i);
-            is_safe(&slice)
-        }),
-    }
+    reports.iter().enumerate().any(|(i, _)| {
+        let mut slice = reports.clone();
+        slice.remove(i);
+        is_safe(&slice)
+    })
 }
 
 pub fn part1(input: &Vec<String>) -> i32 {
