@@ -5,7 +5,8 @@ use url::Url;
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 3 {
+    println!("{:?}", args);
+    if args.len() < 3 {
         println!("Usage: {} <year> <day>", args[0]);
         process::exit(1);
     }
@@ -30,6 +31,7 @@ async fn main() {
         Ok(lines) => {
             let (part1, part2) = match day.as_str() {
                 "1" => (day1::part1(&lines), day1::part2(&lines)),
+                "2" => (day2::part1(&lines), day2::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);
