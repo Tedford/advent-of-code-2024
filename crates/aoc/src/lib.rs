@@ -127,7 +127,6 @@ pub async fn get_input_from_site(
         return Err("Path is empty".to_string());
     }
 
-    //let url = Url::parse(&context.url).map_err(|e| e.to_string())?;
     let jar = reqwest::cookie::Jar::default();
 
     // the value of domain needs to be extracted from context.url with the schema removed
@@ -152,7 +151,7 @@ pub async fn get_input_from_site(
         ));
     }
 
-    Ok(body)
+    Ok(body.trim().to_string())
 }
 
 #[cfg(test)]
