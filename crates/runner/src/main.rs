@@ -33,11 +33,27 @@ async fn main() {
                 "1" => (day1::part1(&lines), day1::part2(&lines)),
                 "2" => (day2::part1(&lines), day2::part2(&lines)),
                 "3" => (day3::part1(&lines), day3::part2(&lines)),
+                "4" => (day4::part1(&lines), day4::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);
                 }
             };
+
+            // let crate_name = format!("day{}", day);
+            // match syn::parse_str::<syn::ItemMod>(&crate_name) {
+            //     Ok(_) => {
+            //         let part1_fn = format!("{}::part1", crate_name);
+            //         let part2_fn = format!("{}::part2", crate_name);
+            //         let part1: i32 = part1_fn(&lines);
+            //         let part2: i32 = part2_fn(&lines);
+            //         (part1, part2)
+            //     }
+            //     Err(_) => {
+            //         println!("Day {} not implemented", day);
+            //         process::exit(3);
+            //     }
+
             println!("Part 1: {}", part1);
             println!("Part 2: {}", part2);
         }
