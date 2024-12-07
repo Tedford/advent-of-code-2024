@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-
 fn get_rules(input: &[String]) -> HashMap<i32, Vec<i32>> {
     let mut rules: HashMap<i32, Vec<i32>> = HashMap::new();
 
@@ -53,7 +52,6 @@ pub fn part1(input: &Vec<String>) -> i32 {
         .filter(|update| {
             let mut encountered: HashMap<i32, i32> = HashMap::new();
             for page in update.iter() {
-                println!("Checking for page: {}", page);
                 match rules.get(page) {
                     Some(dependents) => {
                         for dependent in dependents {
@@ -83,7 +81,6 @@ pub fn part2(input: &Vec<String>) -> i32 {
         .filter(|update| {
             let mut encountered: HashMap<i32, i32> = HashMap::new();
             for page in update.iter() {
-                println!("Checking for page: {}", page);
                 match rules.get(page) {
                     Some(dependents) => {
                         for dependent in dependents {
@@ -101,28 +98,39 @@ pub fn part2(input: &Vec<String>) -> i32 {
         })
         .map(|update| update.clone())
         .collect();
-    
+
     let reordered = invalid.iter().map(|p| reorder(p, &rules)).collect();
 
     score_updates(reordered)
 }
 
-fn reorder(pages: &Vec<i32>, rules: &HashMap<i32, Vec<i32>>) -> Vec<i32> {
+fn reorder(pages: &Vec<i32>, proceeds: &HashMap<i32, Vec<i32>>) -> Vec<i32> {
     let mut result = vec![];
+    let mut follows = HashMap::new();
+
+    proceeds.iter().for_each(|(key, value)| {
+        value.iter().for_each(|v| {
+            if follows.contains_key(v) {
+                let entry: &mut Vec<i32> = follows.get_mut(v).unwrap();
+                entry.push(*key);
+            } else {
+                follows.insert(*v, vec![*key]);
+            }
+        });
+    });
 
     for page in pages.clone() {
-        match result.len() {
-            0 => result.push(page),
-            _ => {
-                rules.iter().enumerate().for_each(|(_, (key, value))| {
-                    if value.contains(&page) && result.contains(&key) {
-                        result.push(page);
-                    } else {
-                        result.insert(0, page);
+        let mut index = 0;
+        result.iter().enumerate().for_each(|(i, p)| {
+            if follows.contains_key(&page) {
+                    let antecedents = follows.get(&page).unwrap();
+                    if antecedents.contains(&p) {
+                        index = i + 1;
                     }
-                });
-            }
-        }
+                }
+        });
+
+        result.insert(index, page);
     }
 
     result
