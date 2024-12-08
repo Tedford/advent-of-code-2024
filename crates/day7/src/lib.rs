@@ -15,50 +15,53 @@ fn get_calibration_rules(input: &String) -> Calibration {
     Calibration { target, values }
 }
 
-fn is_valid(calibration: &Calibration) -> bool {
-    let mut valid = false;
-    let mut equations = Vec::new();
+fn is_valid(calibration: &Calibration, operands: Vec<char>) -> bool {
+    let cases = operands.len().pow((calibration.values.len() - 1) as u32);
 
-    let cases = 2_i32.pow((calibration.values.len() - 1) as u32);
-    for i in 0..cases {
+    (0..cases).any(|i| {
         let mut total = calibration.values[0];
         let mut formula = format!("{}", total);
 
-        for j in 1..calibration.values.len() {
-            if (i >> (j - 1)) & 1 == 1 {
-                total += calibration.values[j];
-                formula.push_str(&format!(" + {}", calibration.values[j]));
-            } else {
-                total *= calibration.values[j];
-                formula.push_str(&format!(" * {}", calibration.values[j]));
-            }
+        for (j, &value) in calibration.values.iter().enumerate().skip(1) {
+            let operand = operands[(i / operands.len().pow((j - 1) as u32)) % operands.len()];
+            total = match operand {
+                '+' => total + value,
+                '|' => format!("{total}{}", value).parse::<i64>().unwrap(),
+                '*' => total * value,
+                _ => panic!("Invalid operand"),
+            };
+            formula.push_str(&format!(" {operand} {}", value));
         }
 
-        valid |= total == calibration.target;
         if total == calibration.target {
-            equations.push(format!("\t{} == {}", total, formula));
+            println!("[{:?}] == {:?}", calibration.target, calibration.values);
+            println!("\t{} == {}", total, formula);
+            true
+        } else {
+            false
         }
-    }
-
-    if valid {
-        println!("[{:?}] == {:?}", calibration.target, calibration.values);
-    }
-
-    valid
+    })
 }
 
-
-pub fn part1(_input: &Vec<String>) -> i64 {
-    let rules = _input
+fn kernel(input: &Vec<String>, operands: &Vec<char>) -> i64 {
+    let rules = input
         .iter()
         .map(|x| get_calibration_rules(x))
         .collect::<Vec<_>>();
 
-    rules.iter().filter(|i| is_valid(i)).map(|i| i.target).sum()
+    rules
+        .iter()
+        .filter(|i| is_valid(i, operands.clone()))
+        .map(|i| i.target)
+        .sum()
 }
 
-pub fn part2(_input: &Vec<String>) -> i64 {
-    0
+pub fn part1(input: &Vec<String>) -> i64 {
+    kernel(input, &vec!['+', '*'])
+}
+
+pub fn part2(input: &Vec<String>) -> i64 {
+    kernel(input, &vec!['+', '*', '|'])
 }
 
 mod tests {
@@ -73,12 +76,33 @@ mod tests {
     }
 
     #[rstest]
-    #[case(971, vec![64, 555, 4, 23, 14, 225, 86], true)]
-    #[case(122, vec![9, 32, 72, 9, 1], true)]
-    #[case(503, vec![358, 1, 9, 78, 58], true)]
-    fn formula_validation(#[case] target: i64, #[case] values: Vec<i64>, #[case] expected: bool) {
+    #[case::target_971(971, vec![64, 555, 4, 23, 14, 225, 86], true)]
+    #[case::target_122(122, vec![9, 32, 72, 9, 1], true)]
+    #[case::target_503(503, vec![358, 1, 9, 78, 58], true)]
+    fn formula_validation_part1(
+        #[case] target: i64,
+        #[case] values: Vec<i64>,
+        #[case] expected: bool,
+    ) {
         let calibration = Calibration { target, values };
-        let result = is_valid(&calibration);
+        let result = is_valid(&calibration, vec!['+', '*']);
+        assert_eq!(result, expected);
+    }
+
+    #[rstest]
+    #[case::target_971(971, vec![64, 555, 4, 23, 14, 225, 86], true)]
+    #[case::target_122(122, vec![9, 32, 72, 9, 1], true)]
+    #[case::target_503(503, vec![358, 1, 9, 78, 58], true)]
+    #[case::target_156(156, vec![15, 6], true)]
+    #[case::target_7290(7290, vec![6,8,6,15], true)]
+    #[case::target_192(192, vec![17,8,14], true)]
+    fn formula_validation_part2(
+        #[case] target: i64,
+        #[case] values: Vec<i64>,
+        #[case] expected: bool,
+    ) {
+        let calibration = Calibration { target, values };
+        let result = is_valid(&calibration, vec!['+', '*', '|']);
         assert_eq!(result, expected);
     }
 
