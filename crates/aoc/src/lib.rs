@@ -1,4 +1,5 @@
 pub mod session;
+mod stats;
 
 use reqwest::{Client, Url};
 use std::fs;

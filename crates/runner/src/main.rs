@@ -31,12 +31,13 @@ async fn main() {
         Ok(lines) => {
             let start_time = std::time::Instant::now();
             let (part1, part2) = match day.as_str() {
-                "1" => (day1::part1(&lines), day1::part2(&lines)),
-                "2" => (day2::part1(&lines), day2::part2(&lines)),
-                "3" => (day3::part1(&lines), day3::part2(&lines)),
-                "4" => (day4::part1(&lines), day4::part2(&lines)),
-                "5" => (day5::part1(&lines), day5::part2(&lines)),
-                "6" => (day6::part1(&lines), day6::part2(&lines)),
+                "1" => (day1::part1(&lines) as i64, day1::part2(&lines) as i64),
+                "2" => (day2::part1(&lines) as i64, day2::part2(&lines) as i64),
+                "3" => (day3::part1(&lines) as i64, day3::part2(&lines) as i64),
+                "4" => (day4::part1(&lines) as i64, day4::part2(&lines) as i64),
+                "5" => (day5::part1(&lines) as i64, day5::part2(&lines) as i64),
+                "6" => (day6::part1(&lines) as i64, day6::part2(&lines) as i64),
+                "7" => (day7::part1(&lines), day7::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);
