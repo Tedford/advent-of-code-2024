@@ -154,6 +154,12 @@ pub async fn get_input_from_site(
     Ok(body.trim().to_string())
 }
 
+pub fn pretty_print<T: std::fmt::Debug>(matrix: &Vec<Vec<T>>) {
+    for row in matrix {
+        println!("{:#?}", row.iter().map(|elem| format!("{:?}", elem)).collect::<String>());
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -205,6 +211,8 @@ mod tests {
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), "mocked input");
     }
+
+
 
     #[test]
     fn cache_hit() {
