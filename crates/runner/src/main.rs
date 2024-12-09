@@ -38,6 +38,7 @@ async fn main() {
                 "5" => (day5::part1(&lines) as i64, day5::part2(&lines) as i64),
                 "6" => (day6::part1(&lines) as i64, day6::part2(&lines) as i64),
                 "7" => (day7::part1(&lines), day7::part2(&lines)),
+                "9" => (day9::part1(&lines), day9::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);

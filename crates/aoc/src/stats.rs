@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn combinations_with_repetition(n: usize, r: usize) -> usize {
     fn factorial(num: usize) -> usize {
         (1..=num).product()
@@ -6,6 +7,7 @@ pub fn combinations_with_repetition(n: usize, r: usize) -> usize {
     factorial(n + r - 1) / (factorial(r) * factorial(n - 1))
 }
 
+#[allow(dead_code)]
 pub fn combinations(n: usize, r: usize) -> usize {
     fn factorial(num: usize) -> usize {
         (1..=num).product()

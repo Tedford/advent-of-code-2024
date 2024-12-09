@@ -31,6 +31,9 @@ fn is_valid(calibration: &Calibration, operands: Vec<char>) -> bool {
                 _ => panic!("Invalid operand"),
             };
             formula.push_str(&format!(" {operand} {}", value));
+            if total > calibration.target {
+                break;
+            }
         }
 
         if total == calibration.target {
@@ -65,9 +68,11 @@ pub fn part2(input: &Vec<String>) -> i64 {
 }
 
 mod tests {
+    #[allow(unused_imports)]
     use super::*;
     use rstest::rstest;
 
+    #[allow(dead_code)]
     fn get_sample() -> Vec<String> {
         include_str!("sample.dat")
             .lines()
