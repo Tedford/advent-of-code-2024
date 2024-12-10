@@ -1,14 +1,32 @@
 use aoc;
 use std::process;
+use getopts::Options;
 use url::Url;
 
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
-    println!("{:?}", args);
-    if args.len() < 3 {
-        println!("Usage: {} <year> <day>", args[0]);
-        process::exit(1);
+    let program = args[0].clone();
+
+    let mut opts = Options::new();
+    opts.optflag("", "profile", "");
+    opts.optflag("", "manifest-path", "");
+    opts.optflag("h", "help", "print this help menu");
+    opts.optflag("y", "year", "The year of the advent of code");
+    opts.optflag("d", "day", "The day of the advent of code to run");
+
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => m,
+        Err(f) => {
+            println!("{}", f.to_string());
+            process::exit(1);
+        }
+    };
+
+    if matches.opt_present("h") {
+        let brief = format!("Usage: {} [options]", program);
+        print!("{}", opts.usage(&brief));
+        process::exit(0);
     }
 
     let session_id = match aoc::session::get_session_id(&std::env::current_dir().unwrap()) {
@@ -19,26 +37,40 @@ async fn main() {
         }
     };
 
-    let year = &args[1];
-    let day = &args[2];
+    let year = match matches.opt_get::<i32>("y") {
+        Ok(Some(y)) => y,
+        _ => {
+            args[1].parse().unwrap()
+        }
+    };
+
+    let day = match matches.opt_get::<i32>("d") {
+        Ok(Some(d)) => d,
+        _ => {
+            args[2].parse().unwrap()
+        }
+    };
+
+
     let context = aoc::Context {
         url: Url::parse("https://adventofcode.com").unwrap(),
         data_dir: std::env::current_dir().unwrap().join("Data"),
         session_id,
     };
-    let input = aoc::get_input(year, day, &context).await;
+    let input = aoc::get_input(&year, &day, &context).await;
     match input {
         Ok(lines) => {
             let start_time = std::time::Instant::now();
-            let (part1, part2) = match day.as_str() {
-                "1" => (day1::part1(&lines) as i64, day1::part2(&lines) as i64),
-                "2" => (day2::part1(&lines) as i64, day2::part2(&lines) as i64),
-                "3" => (day3::part1(&lines) as i64, day3::part2(&lines) as i64),
-                "4" => (day4::part1(&lines) as i64, day4::part2(&lines) as i64),
-                "5" => (day5::part1(&lines) as i64, day5::part2(&lines) as i64),
-                "6" => (day6::part1(&lines) as i64, day6::part2(&lines) as i64),
-                "7" => (day7::part1(&lines), day7::part2(&lines)),
-                "9" => (day9::part1(&lines), day9::part2(&lines)),
+            let (part1, part2) = match day {
+                1 => (day1::part1(&lines) as i64, day1::part2(&lines) as i64),
+                2 => (day2::part1(&lines) as i64, day2::part2(&lines) as i64),
+                3 => (day3::part1(&lines) as i64, day3::part2(&lines) as i64),
+                4 => (day4::part1(&lines) as i64, day4::part2(&lines) as i64),
+                5 => (day5::part1(&lines) as i64, day5::part2(&lines) as i64),
+                6 => (day6::part1(&lines) as i64, day6::part2(&lines) as i64),
+                7 => (day7::part1(&lines), day7::part2(&lines)),
+                9 => (day9::part1(&lines), day9::part2(&lines)),
+                10 => (day10::part1(&lines), day10::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);

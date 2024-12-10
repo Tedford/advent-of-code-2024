@@ -24,7 +24,7 @@ pub struct Context {
 ///
 /// * `Ok(Vec<String>)` - If the input is fetched and parsed successfully.
 /// * `Err(String)` - If there is an error fetching or parsing the input.
-pub async fn get_input(year: &str, day: &str, context: &Context) -> Result<Vec<String>, String> {
+pub async fn get_input(year: &i32, day: &i32, context: &Context) -> Result<Vec<String>, String> {
     println!("Fetching input from for AOC {} Day {}", year, day);
 
     let body = match get_input_from_cache(&year, &day, &context) {
@@ -51,7 +51,7 @@ pub async fn get_input(year: &str, day: &str, context: &Context) -> Result<Vec<S
 /// # Returns
 ///
 /// * `String` - The constructed file name in the format `year.day.dat`.
-fn build_file_name(year: &str, day: &str) -> String {
+fn build_file_name(year: &i32, day: &i32) -> String {
     format!("{}.day{}.dat", year, day)
 }
 
@@ -67,7 +67,7 @@ fn build_file_name(year: &str, day: &str) -> String {
 /// * `Ok(Some(String))` - If the input file exists and is read successfully.
 /// * `Ok(None)` - If the input file does not exist.
 /// * `Err(String)` - If there is an error reading the input file or creating the directory.
-pub fn get_input_from_cache(year: &str, day: &str, context: &Context) -> Option<String> {
+pub fn get_input_from_cache(year: &i32, day: &i32, context: &Context) -> Option<String> {
     let input_dir = std::env::current_dir().unwrap().join(&context.data_dir);
     if !input_dir.exists() {
         fs::create_dir(&input_dir).unwrap();
@@ -94,7 +94,7 @@ pub fn get_input_from_cache(year: &str, day: &str, context: &Context) -> Option<
 ///
 /// * `Ok(())` - If the input is successfully written to the cache.
 /// * `Err(String)` - If there is an error writing the input to the cache.
-pub fn add_to_cache(year: &str, day: &str, body: &str, context: &Context) -> Result<(), String> {
+pub fn add_to_cache(year: &i32, day: &i32, body: &str, context: &Context) -> Result<(), String> {
     let input_dir = std::env::current_dir().unwrap().join(&context.data_dir);
     if !input_dir.exists() {
         fs::create_dir(&input_dir).map_err(|e| e.to_string())?;
@@ -117,8 +117,8 @@ pub fn add_to_cache(year: &str, day: &str, body: &str, context: &Context) -> Res
 /// * `Ok(String)` - If the input is fetched successfully.
 /// * `Err(String)` - If there is an error fetching the input.
 pub async fn get_input_from_site(
-    year: &str,
-    day: &str,
+    year: &i32,
+    day: &i32,
     context: &Context,
 ) -> Result<String, String> {
     let path = format!("{}{}/day/{}/input", context.url, year, day);
