@@ -1,6 +1,6 @@
 use aoc;
-use std::process;
 use getopts::Options;
+use std::process;
 use url::Url;
 
 #[tokio::main]
@@ -71,6 +71,7 @@ async fn main() {
                 7 => (day7::part1(&lines), day7::part2(&lines)),
                 9 => (day9::part1(&lines), day9::part2(&lines)),
                 10 => (day10::part1(&lines), day10::part2(&lines)),
+                11 => (day11::part1(&lines), day11::part2(&lines)),
                 _ => {
                     println!("Day {} not implemented", day);
                     process::exit(3);

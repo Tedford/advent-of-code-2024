@@ -2,10 +2,10 @@
 name = "runner"
 version = "0.1.0"
 edition = "2021"
-build="build.rs"
+build = "build.rs"
 
 [dependencies]
-getopts="*"
+getopts = "*"
 aoc = { path = "../aoc" }
 day1 = { path = "../day1" }
 day2 = { path = "../day2" }
@@ -16,5 +16,6 @@ day6 = { path = "../day6" }
 day7 = { path = "../day7" }
 day9 = { path = "../day9" }
 day10 = { path = "../day10" }
-tokio = { version="1.41.1", features = ["full"] }
+day11 = { path = "../day11" }
+tokio = { version = "1.41.1", features = ["full"] }
 url = "2.5.4"
