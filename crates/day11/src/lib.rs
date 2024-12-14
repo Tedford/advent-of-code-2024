@@ -1,5 +1,15 @@
+#[derive(Eq, PartialEq)]
+struct Stone {
+    value: i64,
+    count: i64,
+}
+
 fn parse(input: &Vec<String>) -> Vec<i64> {
     input.iter().map(|x| x.split_whitespace()).flatten().map(|x| x.parse::<i64>().unwrap()).collect()
+}
+
+fn parse_stones(input: &Vec<String>) -> Vec<Stone> {
+    input.iter().map(|x| x.split_whitespace()).flatten().map(|x| Stone { value: x.parse::<i64>().unwrap(), count: 1 }).collect()
 }
 
 pub fn blink(stones: &Vec<i64>) -> Vec<i64> {
@@ -45,12 +55,33 @@ pub fn part1(input: &Vec<String>) -> i64 {
 }
 
 pub fn part2(input: &Vec<String>) -> i64 {
-    let mut total = 0;
-    for stone in parse(input) {
-        total += blinks(vec![stone], 75).len() as i64;
+    let mut stones = parse_stones(&input);
+    for _ in 0..75 {
+        stones = blink_and_condense(&stones);
     }
 
-    total
+    stones.iter().map(|s| s.count).sum()
+}
+
+fn blink_and_condense(stones: &Vec<Stone>) -> Vec<Stone> {
+    let mut result = vec![];
+
+    for stone in stones {
+        match stone.value {
+            0 => result.push(Stone { value: 1, count: 1 }),
+            x if x.to_string().len() % 2 == 0 => {
+                let text = x.to_string();
+                let left = text[0..text.len() / 2].parse::<i64>().unwrap();
+                let right = text[text.len() / 2..text.len()].parse::<i64>().unwrap();
+                result.push(Stone { value: left, count: 1 });
+                result.push(Stone { value: right, count: 1 });
+            }
+            x => result.push(Stone { value: x * 2048, count: 1 }),
+        }
+    }
+
+
+    result
 }
 
 #[cfg(test)]

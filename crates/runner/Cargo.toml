@@ -17,5 +17,6 @@ day7 = { path = "../day7" }
 day9 = { path = "../day9" }
 day10 = { path = "../day10" }
 day11 = { path = "../day11" }
+day13 = { path = "../day13" }
 tokio = { version = "1.41.1", features = ["full"] }
 url = "2.5.4"
