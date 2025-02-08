@@ -206,7 +206,7 @@ mod tests {
         };
 
         let runtime = tokio::runtime::Runtime::new().unwrap();
-        let result = runtime.block_on(get_input_from_site("2023", "1", &context));
+        let result = runtime.block_on(get_input_from_site(&2023, &1, &context));
 
         println!("{:?}", result);
         assert!(result.is_ok());
@@ -217,8 +217,8 @@ mod tests {
 
     #[test]
     fn cache_hit() {
-        let year = "1013";
-        let day = "8";
+        let year = 1013;
+        let day = 8;
         let body = "test input";
 
         let context = Context {
@@ -227,17 +227,17 @@ mod tests {
             url: Url::parse("https://adventofcode.com").unwrap(),
         };
 
-        let result = add_to_cache(year, day, body, &context);
+        let result = add_to_cache(&year, &day, body, &context);
         assert!(result.is_ok());
 
-        let result = get_input_from_cache(year, day, &context);
+        let result = get_input_from_cache(&year, &day, &context);
         assert_eq!(result, Some(body.to_string()));
     }
 
     #[test]
     fn cache_miss() {
-        let year = "9999";
-        let day = "1";
+        let year = 9999;
+        let day = 1;
 
         let context = Context {
             session_id: "fake_session_id".to_string(),
@@ -245,14 +245,14 @@ mod tests {
             url: Url::parse("https://adventofcode.com").unwrap(),
         };
 
-        let result = get_input_from_cache(year, day, &context);
+        let result = get_input_from_cache(&year, &day, &context);
         assert_eq!(result, None);
     }
 
     #[test]
     fn populate_cache() {
-        let year = "1013";
-        let day = "2";
+        let year = 1013;
+        let day = 2;
         let body = "test input";
 
         let context = Context {
@@ -261,18 +261,18 @@ mod tests {
             url: Url::parse("https://adventofcode.com").unwrap(),
         };
 
-        let result = add_to_cache(year, day, body, &context);
+        let result = add_to_cache(&year, &day, body, &context);
         assert!(result.is_ok());
 
-        let cached_file = context.data_dir.join(build_file_name(year, day));
+        let cached_file = context.data_dir.join(build_file_name(&year, &day));
         let cached_body = fs::read_to_string(&cached_file).unwrap();
         assert_eq!(cached_body, body);
     }
 
     #[test]
     fn overwrite_cached_file() {
-        let year = "1013";
-        let day = "7";
+        let year = 1013;
+        let day = 7;
 
         let context = Context {
             session_id: "fake_session_id".to_string(),
@@ -280,22 +280,22 @@ mod tests {
             url: Url::parse("https://adventofcode.com").unwrap(),
         };
 
-        let result = add_to_cache(year, day, "original", &context);
+        let result = add_to_cache(&year, &day, "original", &context);
         assert!(result.is_ok());
         let body = "altered";
-        let result = add_to_cache(year, day, body, &context);
+        let result = add_to_cache(&year, &day, body, &context);
         assert!(result.is_ok());
 
-        let cached_file = context.data_dir.join(build_file_name(year, day));
+        let cached_file = context.data_dir.join(build_file_name(&year, &day));
         let cached_body = fs::read_to_string(&cached_file).unwrap();
         assert_eq!(cached_body, body);
     }
 
     #[test]
     fn test_build_file_name() {
-        let year = "1013";
-        let day = "7";
-        let result = build_file_name(year, day);
+        let year = 1013;
+        let day = 7;
+        let result = build_file_name(&year, &day);
         assert_eq!(result, "1013.day7.dat");
     }
 }
